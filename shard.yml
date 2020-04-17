@@ -6,9 +6,8 @@ authors:
 
 dependencies:
   libui:
-    path: /home/watzon/Projects/clones/libui.cr
-    # github: watzon/libui.cr
-    # branch: master
+    github: watzon/libui.cr
+    branch: master
   cute:
     github: Papierkorb/cute
     branch: master
