@@ -1,0 +1,18 @@
+name: cru
+version: 0.1.0
+
+authors:
+  - Chris Watzon <cawatson1993@gmail.com>
+
+dependencies:
+  libui:
+    path: /home/watzon/Projects/clones/libui.cr
+    # github: watzon/libui.cr
+    # branch: master
+  cute:
+    github: Papierkorb/cute
+    branch: master
+
+crystal: 0.34.0
+
+license: MIT
