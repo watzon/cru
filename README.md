@@ -1,10 +1,10 @@
 # Cru
 
+Cru is a basic UI framework based off of [Fusion/libui](https://github.com/Fusion/libui.cr) and [libui](https://github.com/andlabs/libui). Right now it's pretty barebones, and libui itself is still "mid alpha" software, but I hope it can eventually become a pretty decent GUI framework for Crystal.
+
 <div align="center">
   <img src="./static/control_gallery_screenshot.png" alt="screenshot">
 </div>
-
-Cru is a basic UI framework based off of [Fusion/libui](https://github.com/Fusion/libui.cr) and [libui](https://github.com/andlabs/libui). Right now it's pretty barebones, and libui itself is still "mid alpha" software, but I hope it can eventually become a pretty decent GUI framework for Crystal.
 
 ## Installation
 
