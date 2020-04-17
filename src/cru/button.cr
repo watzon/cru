@@ -37,7 +37,8 @@ module Cru
     end
 
     def font
-      UI.font_button_font(@button)
+      UI.font_button_font(@button, out descriptor)
+      Font.from_descriptor(descriptor)
     end
 
     @on_changed_cb : Proc(Nil)?
