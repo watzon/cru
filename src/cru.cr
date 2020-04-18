@@ -3,8 +3,8 @@ require "libui"
 
 require "./ext/*"
 
-require "./cru/types/*"
 require "./cru/app"
+require "./cru/types/*"
 require "./cru/*"
 
 module Cui

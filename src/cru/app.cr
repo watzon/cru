@@ -2,6 +2,8 @@ module Cru
   class App
     Cute.signal should_quit(app : App)
 
+    class_getter draw_context : Pointer(UI::DrawContext) { Pointer(UI::DrawContext).malloc(1) }
+
     # Create a new Cru app
     def initialize
       options = UI::InitOptions.new
