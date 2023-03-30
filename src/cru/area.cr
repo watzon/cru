@@ -2,34 +2,44 @@ require "./control"
 
 module Cru
   abstract class Area < Control
-    @@on_draw_cb = Proc(UI::AreaHandler*, UI::Area*, UI::AreaDrawParams*, Nil).new { |h, a, p|
-      h.value.data.as(Area*).value.on_draw(p.value).as(Nil)
-    }
-
-    @@on_mouse_event_cb = Proc(UI::AreaHandler*, UI::Area*, UI::AreaMouseEvent*, Nil).new { |h, a, e|
-      h.value.data.as(Area*).value.on_mouse_event(e.value).as(Nil)
-    }
-
-    @@on_mouse_crossed_cb = Proc(UI::AreaHandler*, UI::Area*, LibC::Int, Nil).new { |h, a, l|
-      h.value.data.as(Area*).value.on_mouse_crossed(l.to_i > 0).as(Nil)
-    }
-
-    @@on_drag_broken_cb = Proc(UI::AreaHandler*, UI::Area*, Nil).new { |h, a|
-      h.value.data.as(Area*).value.on_drag_broken.as(Nil)
-    }
-
-    @@on_key_event_cb = Proc(UI::AreaHandler*, UI::Area*, UI::AreaKeyEvent*, Nil).new { |h, a, e|
-      h.value.data.as(Area*).value.on_key_event(e.value).as(Nil)
-    }
+    @on_draw_cb : Proc(UI::AreaHandler*, UI::Area*, UI::AreaDrawParams*, Nil)
+    @on_mouse_event_cb : Proc(UI::AreaHandler*, UI::Area*, UI::AreaMouseEvent*, Nil)
+    @on_mouse_crossed_cb : Proc(UI::AreaHandler*, UI::Area*, LibC::Int, Nil)
+    @on_drag_broken_cb : Proc(UI::AreaHandler*, UI::Area*, Nil)
+    @on_key_event_cb : Proc(UI::AreaHandler*, UI::Area*, UI::AreaKeyEvent*, Nil)
 
     def initialize(width = nil, height = width)
+      @on_draw_cb = ->(h : UI::AreaHandler*, a : UI::Area*, p : UI::AreaDrawParams*) {
+        on_draw(p.value)
+        nil
+      }
+
+      @on_mouse_event_cb = ->(h : UI::AreaHandler*, a : UI::Area*, e : UI::AreaMouseEvent*) {
+        on_mouse_event(e.value)
+        nil
+      }
+
+      @on_mouse_crossed_cb = ->(h : UI::AreaHandler*, a : UI::Area*, left : LibC::Int) {
+        on_mouse_crossed(left == 1)
+        nil
+      }
+
+      @on_drag_broken_cb = ->(h : UI::AreaHandler*, a : UI::Area*) {
+        on_drag_broken
+        nil
+      }
+
+      @on_key_event_cb = ->(h : UI::AreaHandler*, a : UI::Area*, e : UI::AreaKeyEvent*) {
+        on_key_event(e.value)
+        nil
+      }
+
       @handler = UI::AreaHandler.new
-      @handler.draw = @@on_draw_cb
-      @handler.mouse_event = @@on_mouse_event_cb
-      @handler.mouse_crossed = @@on_mouse_crossed_cb
-      @handler.drag_broken = @@on_drag_broken_cb
-      @handler.key_event = @@on_key_event_cb
-      @handler.data = self.as(Void*)
+      @handler.draw = @on_draw_cb
+      @handler.mouse_event = @on_mouse_event_cb
+      @handler.mouse_crossed = @on_mouse_crossed_cb
+      @handler.drag_broken = @on_drag_broken_cb
+      @handler.key_event = @on_key_event_cb
 
       if width && height
         @area = UI.new_scrolling_area(pointerof(@handler), width, height)

@@ -4,10 +4,14 @@ version: 0.1.0
 authors:
   - Chris Watzon <cawatson1993@gmail.com>
 
+crystalline:
+  main: examples/histogram.cr
+
 dependencies:
   libui:
-    github: watzon/libui.cr
-    branch: master
+    # github: watzon/libui.cr
+    # branch: master
+    path: ../libui.cr
   cute:
     github: Papierkorb/cute
     branch: master

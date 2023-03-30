@@ -11,9 +11,9 @@ class Histogram < Cru::Area
   ColorBlack      = 0x000000
   ColorDodgerBlue = 0x1E90FF
 
-  @datapoints = [0, 23, 12, 43, 35, 32, 65, 87, 23]
+  getter datapoints : Array(Int32)
 
-  def initialize
+  def initialize(@datapoints)
     super()
   end
 
@@ -40,15 +40,16 @@ class Histogram < Cru::Area
     matrix.translate(XOffLeft, YOffTop)
     matrix.transform(params.context)
 
-    color_button = Cru::ColorButton.new
-    color_button.changed.on do
-      graph_colors = color_button.color
-      brush.r = graph_colors[:red]
-      brush.g = graph_colors[:green]
-      brush.b = graph_colors[:blue]
-    end
+    # color_button = Cru::ColorButton.new
+    # color_button.changed.on do
+    #   graph_colors = color_button.color
+    #   brush.r = graph_colors[:red]
+    #   brush.g = graph_colors[:green]
+    #   brush.b = graph_colors[:blue]
+    # end
 
     path = construct_graph(graph_width, graph_height, true)
+    path.fill(params.context, brush)
   end
 
   def on_mouse_event(mouse_event : UI::AreaMouseEvent)
@@ -70,34 +71,31 @@ class Histogram < Cru::Area
 
   def construct_graph(width, height, ext)
     path = Cru::DrawPath.new(:winding)
-    puts @datapoints.size
-    # xs = Array(Float64).new(@datapoints.size, 0.0)
-    # ys = Array(Float64).new(@datapoints.size, 0.0)
+    xs = @datapoints.dup.map{ 0.0 }
+    ys = @datapoints.dup.map{ 0.0 }
 
-    # point_locations(width, height, xs, ys)
+    point_locations(width, height, xs, ys)
 
-    # path.new_figure(xs[0], ys[0])
-    # 1.upto(@datapoints.size).each do |i|
-    #   path.line_to(xs[i], ys[i])
-    # end
+    path.new_figure(xs[0], ys[0])
+    (1...@datapoints.size).each do |i|
+      path.line_to(xs[i], ys[i])
+    end
 
-    # if ext
-    #   path.line_to(width, height)
-    #   path.line_to(0, height)
-    #   path.close_figure
-    # end
+    if ext
+      path.line_to(width, height)
+      path.line_to(0, height)
+      path.close_figure
+    end
 
-    # path.end
-    # path
+    path.end
+    path
   end
 
   def point_locations(width, height, xs, ys)
     xincr = width / 9
     yincr = height / 100
 
-    0.upto(@datapoints.size).each do |i|
-      # Get the value of the point
-      n = @datapoints[i].value
+    @datapoints.each_with_index do |n, i|
       # Because y=0 is the top but n=0 is the bottom, we need to flip
       n = 100 - n
       xs[i] = xincr * i
@@ -125,7 +123,8 @@ inner = Cru::VerticalBox.new
 inner.padded = true
 group.child = inner
 
-histogram = Histogram.new
+datapoints = [0, 23, 12, 43, 35, 32, 65, 87, 23]
+histogram = Histogram.new(datapoints)
 inner.append histogram, true
 
 window.show
